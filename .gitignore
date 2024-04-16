@@ -1,0 +1,6 @@
+*pem
+terraform*
+.terraform
+.terraform*
+*.bak
+tf_ansible_vars*
