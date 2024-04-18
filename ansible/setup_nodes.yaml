@@ -1,0 +1,6 @@
+---
+# file: setup_nodes.yaml
+
+- hosts: all
+  roles:
+    - common

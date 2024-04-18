@@ -2,8 +2,12 @@ resource "tls_private_key" "ubuntu_private_key" {
   algorithm = "RSA"
   rsa_bits  = 4096
 
+  provisioner "local-exec" {
+    command = "mkdir -p .ssh"
+  }
+
   provisioner "local-exec" { # Copy a "myKey.pem" to local computer.
-    command = "echo '${tls_private_key.ubuntu_private_key.private_key_pem}' > ${path.cwd}/.ssh/myKey.pem"
+    command = "echo '${tls_private_key.ubuntu_private_key.private_key_pem}' | tee ${path.cwd}/.ssh/myKey.pem"
   }
 
   provisioner "local-exec" {
@@ -221,7 +225,7 @@ resource "ansible_host" "kubenode" {
 
 resource "ansible_group" "controlplanes" {
   name     = "controlplanes"
-  children = ["kubemaster"]
+  # children = ["kubemaster"]
   variables = {
     hello = "from group!"
   }
@@ -229,7 +233,7 @@ resource "ansible_group" "controlplanes" {
 
 resource "ansible_group" "workers" {
   name     = "workers"
-  children = ["kubenode"]
+  # children = ["kubenode"]
   variables = {
     hello = "from group!"
   }
