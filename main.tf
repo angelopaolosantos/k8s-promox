@@ -52,7 +52,8 @@ resource "proxmox_virtual_environment_vm" "controlplane_vm" {
 
     user_account {
       keys     = [trimspace(tls_private_key.ubuntu_private_key.public_key_openssh)]
-      password = random_password.ubuntu_vm_password.result
+      # password = random_password.ubuntu_vm_password.result
+      password = "mypassword"
       username = var.vm_user
     }
 
@@ -132,7 +133,8 @@ resource "proxmox_virtual_environment_vm" "worker_vm" {
 
     user_account {
       keys     = [trimspace(tls_private_key.ubuntu_private_key.public_key_openssh)]
-      password = random_password.ubuntu_vm_password.result
+      # password = random_password.ubuntu_vm_password.result
+      password = "mypassword"
       username = var.vm_user
     }
 
@@ -180,8 +182,8 @@ resource "proxmox_virtual_environment_download_file" "latest_ubuntu_22_jammy_qco
   content_type = "iso"
   datastore_id = "local"
   node_name    = "pve01"
-  # url          = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
-  url = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64-disk-kvm.img"
+  url          = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
+  # url = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64-disk-kvm.img"
 }
 
 resource "random_password" "ubuntu_vm_password" {

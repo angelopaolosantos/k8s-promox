@@ -62,7 +62,7 @@
 
 - name: download containerd sources
   get_url:
-    url: https://github.com/containerd/containerd/releases/download/v1.6.15/containerd-1.6.15-linux-amd64.tar.gz
+    url: https://github.com/containerd/containerd/releases/download/v1.7.15/containerd-1.7.15-linux-amd64.tar.gz
     dest: /etc/containerd.tar.gz
 
 - name: extract containerd file
@@ -89,7 +89,7 @@
 
 - name: Download runc.amd64
   get_url:
-    url: https://github.com/opencontainers/runc/releases/download/v1.1.4/runc.amd64
+    url: https://github.com/opencontainers/runc/releases/download/v1.2.0-rc.1/runc.amd64
     dest: /etc/runc.amd64
 
 - name: Install runc.amd64
@@ -100,7 +100,7 @@
 
 - name: Download CNI Plugins
   get_url:
-    url: https://github.com/containernetworking/plugins/releases/download/v1.1.1/cni-plugins-linux-amd64-v1.1.1.tgz
+    url: https://github.com/containernetworking/plugins/releases/download/v1.4.1/cni-plugins-linux-amd64-v1.4.1.tgz
     dest: /etc/cni-plugins.tgz
 
 - name: Create /opt/cni/bin Directory
@@ -114,19 +114,7 @@
     dest: /opt/cni/bin
     remote_src: yes
 
-- name: Download the Google Cloud public signing key
-  shell:
-    cmd: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-  # args: 
-  #   creates: /etc/apt/keyrings/kubernetes-archive-keyring.gpg
-
-- name: Update APT sources list
-  shell:
-    cmd: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
-  # args: 
-  #   creates: /etc/apt/sources.list.d/kubernetes.list
-
-- name: Update apt and install apt-transport-https, ca-certificates, curl
+- name: Update apt and install apt-transport-https, ca-certificates, curl, gpg
   apt:
     update_cache: yes
     pkg:
@@ -139,6 +127,16 @@
   file:
     path: /etc/apt/keyrings/
     state: directory
+
+- name: Download public signing key for Kubernetes package repositories
+  shell:
+    cmd: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor --yes -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+- name: Update APT sources list
+  shell:
+    cmd: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+  # args: 
+  #   creates: /etc/apt/sources.list.d/kubernetes.list
 
 - name: Update apt and install kubelet, kubeadm, kubectl
   apt:
