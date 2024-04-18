@@ -180,7 +180,8 @@ resource "proxmox_virtual_environment_download_file" "latest_ubuntu_22_jammy_qco
   content_type = "iso"
   datastore_id = "local"
   node_name    = "pve01"
-  url          = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
+  # url          = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
+  url = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64-disk-kvm.img"
 }
 
 resource "random_password" "ubuntu_vm_password" {
