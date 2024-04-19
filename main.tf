@@ -76,7 +76,7 @@ resource "proxmox_virtual_environment_vm" "controlplane_vm" {
   }
 
   memory {
-    dedicated = 2048
+    dedicated = 4096
   }
 
   network_device {
@@ -157,7 +157,7 @@ resource "proxmox_virtual_environment_vm" "worker_vm" {
   }
 
   memory {
-    dedicated = 2048
+    dedicated = 4096
   }
 
   network_device {
