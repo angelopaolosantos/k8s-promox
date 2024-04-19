@@ -10,9 +10,3 @@
     - tf_ansible_vars_file.yaml
   roles:
     - nfs
-
-- hosts: controlplane
-  vars_files:
-    - tf_ansible_vars_file.yaml
-  roles:
-    - controlplane

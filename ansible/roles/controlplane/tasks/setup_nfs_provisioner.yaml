@@ -19,3 +19,9 @@
         --namespace nfs-provisioner \
         --set nfs.server={{ tf_nfs_ip }} \
         --set nfs.path=/data
+  ignore_errors: true
+
+- name: Copy nfs-test.yaml
+  ansible.builtin.copy:
+    src: manifests/nfs-test.yaml
+    dest: ~/nfs-test.yaml
