@@ -1,5 +1,17 @@
 ---
-# file: site.yaml
+# file: playbook.yaml
+
+- hosts: localhost
+  gather_facts: false 
+  vars_files:
+    - tf_ansible_vars_file.yaml
+  tasks:
+    - name: Check mandatory variables imported from Terraform
+      assert:
+        that:
+          - tf_nfs_ip is defined
+        fail_msg: "tf_* variable usually defined in './ansible/tf_ansible_vars_file.yaml' is missing"
+
 - import_playbook: setup_nodes.yaml
 - import_playbook: initialize_cluster.yaml
 - import_playbook: setup_controlplanes.yaml

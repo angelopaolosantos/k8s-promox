@@ -1,4 +1,5 @@
-- hosts: all
-  tasks:
-  - name: Ping my hosts
-    ansible.builtin.ping:
+- hosts: controlplanes
+  vars_files:
+    - tf_ansible_vars_file.yaml
+  roles:
+    - controlplane

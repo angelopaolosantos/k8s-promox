@@ -1,0 +1,5 @@
+# roles/nfs/tasks/main.yml
+
+- name: Setup NFS server
+  import_tasks: setup_nfs_server.yaml
+  become: true

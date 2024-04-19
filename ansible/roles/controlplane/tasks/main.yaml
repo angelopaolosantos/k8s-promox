@@ -1,0 +1,6 @@
+# roles/controlplane/tasks/main.yml
+
+- name: Setup NFS provisioner
+  import_tasks: setup_nfs_provisioner.yaml
+  become: true
+  become_user: ubuntu

@@ -34,6 +34,13 @@ variable "worker_ips" {
     ]
 }
 
+variable "nfs_ips" {
+    type = list(string)
+    default = [
+        "192.168.254.105",
+    ]
+}
+
 variable "controlplane_count" {
     type = number
     default = 1

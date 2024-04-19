@@ -1,0 +1,21 @@
+---
+# file: roles/nfs/tasks/setup_nfs_provisioner.yaml
+
+- name: Check mandatory variables imported from Terraform
+  assert:
+    that:
+      - tf_nfs_ip is defined
+    fail_msg: "tf_nfs_ip is not defined in './ansible/tf_ansible_vars_file.yaml'"
+
+- name: Install nfs provisioner via helm
+  shell:
+    cmd: helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner
+
+- name: Install nfs provisioner
+  shell:
+    cmd: |
+      helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
+        --create-namespace \
+        --namespace nfs-provisioner \
+        --set nfs.server={{ tf_nfs_ip }} \
+        --set nfs.path=/data

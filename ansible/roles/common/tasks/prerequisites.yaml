@@ -87,7 +87,7 @@
     path: /etc/containerd/
     state: directory
 
-- name: Update APT sources list
+- name: Create containerd config file
   shell:
     cmd: containerd config default | sudo tee /etc/containerd/config.toml
 
@@ -141,6 +141,7 @@
       - ca-certificates
       - curl
       - gpg
+      - nfs-common
 
 - name: Create /etc/apt/keyrings/ Directory
   file:

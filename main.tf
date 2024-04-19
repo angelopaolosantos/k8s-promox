@@ -179,6 +179,87 @@ resource "proxmox_virtual_environment_vm" "worker_vm" {
   # serial_device {}
 }
 
+resource "proxmox_virtual_environment_vm" "nfs_vm" {
+  name        = "nfs-vm"
+  description = "Managed by Terraform"
+  tags        = ["terraform", "ubuntu"]
+
+  node_name = "pve01"
+
+  agent {
+    # read 'Qemu guest agent' section, change to true only when ready
+    enabled = false
+  }
+
+  startup {
+    order      = "3"
+    up_delay   = "60"
+    down_delay = "60"
+  }
+
+  disk {
+    datastore_id = "local-zfs"
+    file_id      = proxmox_virtual_environment_download_file.latest_ubuntu_22_jammy_qcow2_img.id
+    interface    = "scsi0"
+    size = 100
+  }
+
+  initialization {
+    datastore_id = "local-zfs"
+
+    ip_config {
+      ipv4 {
+        address = "${var.nfs_ips[0]}/${var.network_range}"
+        gateway = var.gateway
+      }
+    }
+
+    user_account {
+      keys     = [trimspace(tls_private_key.ubuntu_private_key.public_key_openssh)]
+      # password = random_password.ubuntu_vm_password.result
+      password = "mypassword"
+      username = var.vm_user
+    }
+
+    interface = "ide2"
+  }
+
+  machine = "q35"
+
+  bios = "ovmf"
+
+  efi_disk {
+    datastore_id = "local-zfs"
+    file_format = "raw"
+    type = "4m"
+  }
+
+  cpu {
+    cores = 4
+    type = "x86-64-v2-AES"
+  }
+
+  memory {
+    dedicated = 2048
+  }
+
+  network_device {
+    bridge = "vmbr0"
+    model = "virtio"
+    # vlan_id = 10
+  }
+
+  operating_system {
+    type = "l26"
+  }
+
+  # tpm_state {
+  #   version = "v2.0"
+  # }
+
+  # serial_device {}
+}
+
 
 resource "proxmox_virtual_environment_download_file" "latest_ubuntu_22_jammy_qcow2_img" {
   content_type = "iso"
@@ -228,6 +309,21 @@ resource "ansible_host" "kubenode" {
   count = var.worker_count
 }
 
+resource "ansible_host" "nfs" {
+  name   = var.nfs_ips[0]
+  groups = ["nfs"]
+
+  variables = {
+    ansible_user                 = var.vm_user
+    ansible_ssh_private_key_file = "./.ssh/myKey.pem"
+    ansible_python_interpreter   = "/usr/bin/python3"
+    host_name                    = proxmox_virtual_environment_vm.nfs_vm.name 
+    greetings                    = "from host!"
+    some                         = "variable"
+    private_ip                   = var.nfs_ips[0]
+  }
+}
+
 resource "ansible_group" "controlplanes" {
   name     = "controlplanes"
   # children = ["kubemaster"]
@@ -244,6 +340,22 @@ resource "ansible_group" "workers" {
   }
 }
 
+resource "ansible_group" "cluster" {
+  name     = "cluster"
+  children = ["controlplanes", "workers"]
+  variables = {
+    hello = "from group!"
+  }
+}
+
+resource "ansible_group" "nfs" {
+  name     = "nfs"
+  # children = ["kubenode"]
+  variables = {
+    hello = "from group!"
+  }
+}
+
 # Export Terraform variable values to an Ansible var_file
 resource "local_file" "tf_ansible_vars_file_new" {
   content = <<-DOC
@@ -252,6 +364,7 @@ resource "local_file" "tf_ansible_vars_file_new" {
 
     # tf_instance_ami: 
     # tf_aws_instance_controlplace_ip: 
+    tf_nfs_ip: ${var.nfs_ips[0]}
     DOC
   filename = "./ansible/tf_ansible_vars_file.yaml"
 }

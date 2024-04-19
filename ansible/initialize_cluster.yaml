@@ -109,7 +109,7 @@
       creates: node_joined.txt # Runs task only once since file is created once
   
 - name: Fix Nodes NotReady Status
-  hosts: all
+  hosts: cluster
   become: true
   tasks:
     - name: systemctl daemon-reload
