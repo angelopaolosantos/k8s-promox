@@ -4,3 +4,4 @@ terraform*
 .terraform*
 *.bak
 tf_ansible_vars*
+variable.tfvars

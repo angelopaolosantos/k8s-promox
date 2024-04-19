@@ -60,21 +60,40 @@
 - debug: var=msg2.stdout_lines
 - debug: var=msg3.stdout_lines
 
-- name: download containerd sources
-  get_url:
-    url: https://github.com/containerd/containerd/releases/download/v1.7.15/containerd-1.7.15-linux-amd64.tar.gz
-    dest: /etc/containerd.tar.gz
+# - name: download containerd sources
+#   get_url:
+#     url: https://github.com/containerd/containerd/releases/download/v1.7.15/containerd-1.7.15-linux-amd64.tar.gz
+#     dest: /etc/containerd.tar.gz
 
-- name: extract containerd file
-  unarchive:
-    src: /etc/containerd.tar.gz
-    dest: /usr/local
-    remote_src: yes
+# - name: extract containerd file
+#   unarchive:
+#     src: /etc/containerd.tar.gz
+#     dest: /usr/local
+#     remote_src: yes
 
-- name: download containerd service file
-  get_url:
-    url: https://raw.githubusercontent.com/containerd/containerd/main/containerd.service
-    dest: /etc/systemd/system/containerd.service
+# - name: download containerd service file
+#   get_url:
+#     url: https://raw.githubusercontent.com/containerd/containerd/main/containerd.service
+#     dest: /etc/systemd/system/containerd.service
+
+- name: Update apt and install containerd
+  apt:
+    update_cache: yes
+    pkg:
+      - containerd
+
+- name: Create /etc/containerd Directory
+  file:
+    path: /etc/containerd/
+    state: directory
+
+- name: Update APT sources list
+  shell:
+    cmd: containerd config default | sudo tee /etc/containerd/config.toml
+
+- name: Update to SystemdCgroup value to True
+  shell:
+    cmd: sudo sed -i 's/ SystemdCgroup = false/ SystemdCgroup = true/' /etc/containerd/config.toml
 
 - name: systemctl daemon-reload
   ansible.builtin.systemd:
@@ -87,16 +106,16 @@
     masked: no
     state: started
 
-- name: Download runc.amd64
-  get_url:
-    url: https://github.com/opencontainers/runc/releases/download/v1.2.0-rc.1/runc.amd64
-    dest: /etc/runc.amd64
+# - name: Download runc.amd64
+#   get_url:
+#     url: https://github.com/opencontainers/runc/releases/download/v1.2.0-rc.1/runc.amd64
+#     dest: /etc/runc.amd64
 
-- name: Install runc.amd64
-  shell:
-    cmd: install -m 755 /etc/runc.amd64 /usr/local/sbin/runc
-  args: 
-    creates: /usr/local/sbin/runc
+# - name: Install runc.amd64
+#   shell:
+#     cmd: install -m 755 /etc/runc.amd64 /usr/local/sbin/runc
+#   args: 
+#     creates: /usr/local/sbin/runc
 
 - name: Download CNI Plugins
   get_url:

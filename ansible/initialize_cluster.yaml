@@ -56,7 +56,6 @@
       src: /etc/kubernetes/admin.conf
       remote_src: yes
       dest: /home/ubuntu/.kube/config
-        # force: no
 
   - name: Download admin.conf
     ansible.builtin.fetch:
@@ -82,6 +81,12 @@
     set_fact:
       join_command: "{{ join_command_raw.stdout_lines[0] }}"
 
+  - name: Install Weave Net
+    shell:
+      cmd: |
+        kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
+    become_user: ubuntu
+
   - name: Install helm if not exists
     unarchive:
       src: https://get.helm.sh/helm-v3.14.0-linux-amd64.tar.gz
@@ -102,12 +107,7 @@
     args:
       chdir: $HOME
       creates: node_joined.txt # Runs task only once since file is created once
-  - name: create local persistent volume directory (keycloak)
-    ansible.builtin.file:
-      path: /mnt/kubernetes-pv
-      state: directory
-      mode: '0755'
-
+  
 - name: Fix Nodes NotReady Status
   hosts: all
   become: true
@@ -125,9 +125,3 @@
         state: restarted
   tags:
     - restart_services
-
-# - name: Install Weave Net
-  #   shell:
-  #     cmd: |
-  #       kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
-  #   become_user: ubuntu

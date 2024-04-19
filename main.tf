@@ -38,6 +38,7 @@ resource "proxmox_virtual_environment_vm" "controlplane_vm" {
     datastore_id = "local-zfs"
     file_id      = proxmox_virtual_environment_download_file.latest_ubuntu_22_jammy_qcow2_img.id
     interface    = "scsi0"
+    size = 25
   }
 
   initialization {
@@ -119,6 +120,7 @@ resource "proxmox_virtual_environment_vm" "worker_vm" {
     datastore_id = "local-zfs"
     file_id      = proxmox_virtual_environment_download_file.latest_ubuntu_22_jammy_qcow2_img.id
     interface    = "scsi0"
+    size = 25
   }
 
   initialization {
