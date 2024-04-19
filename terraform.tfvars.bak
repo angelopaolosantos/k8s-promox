@@ -1,0 +1,3 @@
+proxmox_endpoint = "https://myproxmox-endpoint"
+proxmox_username = "myusername"
+proxmox_password = "mypassword"

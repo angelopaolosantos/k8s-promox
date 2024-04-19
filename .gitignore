@@ -1,10 +1,9 @@
 *.pem
-terraform.*
+terraform.tfstate*
 .terraform*
 *.bak
-*.kube/*
 ansible/.kube/*
 .ssh/
-*admin.conf
 tf_ansible_vars_file.yaml
-variable.tfvars
+terraform.tfvars
+!terraform.tfvars.bak

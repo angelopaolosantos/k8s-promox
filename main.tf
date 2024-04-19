@@ -89,12 +89,6 @@ resource "proxmox_virtual_environment_vm" "controlplane_vm" {
   operating_system {
     type = "l26"
   }
-
-  # tpm_state {
-  #   version = "v2.0"
-  # }
-
-  # serial_device {}
 }
 
 resource "proxmox_virtual_environment_vm" "worker_vm" {
@@ -171,12 +165,6 @@ resource "proxmox_virtual_environment_vm" "worker_vm" {
   operating_system {
     type = "l26"
   }
-
-  # tpm_state {
-  #   version = "v2.0"
-  # }
-
-  # serial_device {}
 }
 
 resource "proxmox_virtual_environment_vm" "nfs_vm" {
@@ -253,11 +241,6 @@ resource "proxmox_virtual_environment_vm" "nfs_vm" {
     type = "l26"
   }
 
-  # tpm_state {
-  #   version = "v2.0"
-  # }
-
-  # serial_device {}
 }
 
 
@@ -266,7 +249,6 @@ resource "proxmox_virtual_environment_download_file" "latest_ubuntu_22_jammy_qco
   datastore_id = "local"
   node_name    = "pve01"
   url          = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
-  # url = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64-disk-kvm.img"
 }
 
 resource "random_password" "ubuntu_vm_password" {
@@ -326,7 +308,6 @@ resource "ansible_host" "nfs" {
 
 resource "ansible_group" "controlplanes" {
   name     = "controlplanes"
-  # children = ["kubemaster"]
   variables = {
     hello = "from group!"
   }
@@ -334,7 +315,6 @@ resource "ansible_group" "controlplanes" {
 
 resource "ansible_group" "workers" {
   name     = "workers"
-  # children = ["kubenode"]
   variables = {
     hello = "from group!"
   }
@@ -350,7 +330,6 @@ resource "ansible_group" "cluster" {
 
 resource "ansible_group" "nfs" {
   name     = "nfs"
-  # children = ["kubenode"]
   variables = {
     hello = "from group!"
   }
