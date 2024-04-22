@@ -1,13 +1,13 @@
 ---
 # file: roles/nfs/tasks/setup_nfs_server.yaml
 
-- name: Update apt and install containerd
+- name: Update apt and install nfs-server
   apt:
     update_cache: yes
     pkg:
       - nfs-server
 
-- name: Create /etc/containerd Directory
+- name: Create data Directory
   file:
     path: /data/
     state: directory
@@ -15,7 +15,7 @@
 - name: Update exports file
   ansible.builtin.lineinfile:
     path: /etc/exports
-    line: /data 192.168.12.8(rw,no_subtree_check,no_root_squash)
+    line: /data {{ nfs_allowed_access_ip }}(rw,no_subtree_check,no_root_squash)
     create: yes
 
 - name: Enable nfs-server

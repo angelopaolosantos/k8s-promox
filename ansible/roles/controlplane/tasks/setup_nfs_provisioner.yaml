@@ -7,9 +7,13 @@
       - tf_nfs_ip is defined
     fail_msg: "tf_nfs_ip is not defined in './ansible/tf_ansible_vars_file.yaml'"
 
-- name: Install nfs provisioner via helm
+- name: Add nfs provisioner repo in helm
   shell:
     cmd: helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner
+
+- name: Wait for control-plane pods become ready
+  shell: "kubectl wait --namespace=kube-system --for=condition=Ready pods --selector tier=control-plane --timeout=600s"
+  register: control_plane_pods_ready
 
 - name: Install nfs provisioner
   shell:

@@ -273,6 +273,9 @@ resource "ansible_host" "kubemaster" {
     private_ip                   = var.controlplane_ips[count.index]
   }
   count = var.controlplane_count
+
+  # Added to destroy this node before nfs server, otherwise will get stuck with nfs error restricting shutdown.
+  depends_on = [ ansible_host.nfs ] 
 }
 
 resource "ansible_host" "kubenode" {
@@ -289,6 +292,8 @@ resource "ansible_host" "kubenode" {
     private_ip                   = var.worker_ips[count.index]
   }
   count = var.worker_count
+
+  depends_on = [ ansible_host.nfs ]
 }
 
 resource "ansible_host" "nfs" {
@@ -344,6 +349,7 @@ resource "local_file" "tf_ansible_vars_file_new" {
     # tf_instance_ami: 
     # tf_aws_instance_controlplace_ip: 
     tf_nfs_ip: ${var.nfs_ips[0]}
+    nfs_allowed_access_ip: ${var.nfs_allowed_access_ip}
     DOC
   filename = "./ansible/tf_ansible_vars_file.yaml"
 }

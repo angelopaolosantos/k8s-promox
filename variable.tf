@@ -41,6 +41,11 @@ variable "nfs_ips" {
     ]
 }
 
+variable "nfs_allowed_access_ip" {
+    type = string
+    default = "192.168.254.0/24"
+}
+
 variable "controlplane_count" {
     type = number
     default = 1
