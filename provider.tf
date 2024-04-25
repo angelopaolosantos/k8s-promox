@@ -9,6 +9,9 @@ terraform {
       version = "1.2.0"
     }
   }
+  backend "pg" {
+    conn_str = "postgres://terraform_user:mypassword@192.168.254.210/terraform_backend?sslmode=disable"
+  }
 }
 
 provider "proxmox" {
