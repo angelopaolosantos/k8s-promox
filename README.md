@@ -14,3 +14,5 @@ ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i .ssh/myKey.pe
 terraform state pull > terraform.tfstate
 
 terraform show -json
+
+https://github.com/elasticdog/transcrypt
