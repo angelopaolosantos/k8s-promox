@@ -1,0 +1,2 @@
+#pattern  filter=crypt diff=crypt merge=crypt
+.ssh/myKey.pem  pattern  filter=crypt diff=crypt merge=crypt
