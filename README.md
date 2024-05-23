@@ -1,6 +1,6 @@
 # Kubernetes in Proxmox
 
-## Run Terraform to provision LXC container
+## Run Terraform to provision VM containers
 Install transcrypt to decrypt config.pg.tfbackend before initializing terraform
 ```
 terraform init --backend-config=config.pg.tfbackend 
