@@ -1,4 +1,3 @@
-ansible/.kube/*
 .terraform/
 .terraform.lock.hcl
 terraform.tfstate*
