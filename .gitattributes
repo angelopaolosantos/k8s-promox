@@ -1,2 +1,4 @@
 #pattern  filter=crypt diff=crypt merge=crypt
-.ssh/myKey.pem  pattern  filter=crypt diff=crypt merge=crypt
+config.pg.tfbackend filter=crypt diff=crypt merge=crypt
+terraform.tfvars filter=crypt diff=crypt merge=crypt
+*.pem filter=crypt diff=crypt merge=crypt

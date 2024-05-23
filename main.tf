@@ -6,12 +6,12 @@ resource "tls_private_key" "ubuntu_private_key" {
     command = "mkdir -p .ssh"
   }
 
-  provisioner "local-exec" { # Copy a "myKey.pem" to local computer.
-    command = "echo '${tls_private_key.ubuntu_private_key.private_key_pem}' | tee ${path.cwd}/.ssh/myKey.pem"
+  provisioner "local-exec" { # Copy a "my-private-key.pem" to local computer.
+    command = "echo '${tls_private_key.ubuntu_private_key.private_key_pem}' | tee ${path.cwd}/.ssh/my-private-key.pem"
   }
 
   provisioner "local-exec" {
-    command = "chmod 600 ${path.cwd}/.ssh/myKey.pem"
+    command = "chmod 600 ${path.cwd}/.ssh/my-private-key.pem"
   }
 }
 
@@ -265,7 +265,7 @@ resource "ansible_host" "kubemaster" {
 
   variables = {
     ansible_user                 = var.vm_user
-    ansible_ssh_private_key_file = "./.ssh/myKey.pem"
+    ansible_ssh_private_key_file = "./.ssh/my-private-key.pem"
     ansible_python_interpreter   = "/usr/bin/python3"
     host_name                    = proxmox_virtual_environment_vm.controlplane_vm[count.index].name 
     greetings                    = "from host!"
@@ -284,7 +284,7 @@ resource "ansible_host" "kubenode" {
 
   variables = {
     ansible_user                 = var.vm_user
-    ansible_ssh_private_key_file = "./.ssh/myKey.pem"
+    ansible_ssh_private_key_file = "./.ssh/my-private-key.pem"
     ansible_python_interpreter   = "/usr/bin/python3"
     host_name                    = proxmox_virtual_environment_vm.worker_vm[count.index].name 
     greetings                    = "from host!"
@@ -302,7 +302,7 @@ resource "ansible_host" "nfs" {
 
   variables = {
     ansible_user                 = var.vm_user
-    ansible_ssh_private_key_file = "./.ssh/myKey.pem"
+    ansible_ssh_private_key_file = "./.ssh/my-private-key.pem"
     ansible_python_interpreter   = "/usr/bin/python3"
     host_name                    = proxmox_virtual_environment_vm.nfs_vm.name 
     greetings                    = "from host!"
