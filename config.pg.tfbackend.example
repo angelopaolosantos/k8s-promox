@@ -1,0 +1,2 @@
+conn_str = "postgres://user:pass@db.example.com/terraform_backend?sslmode=disable"
+schema_name   = "nextcloud"
