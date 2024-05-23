@@ -28,4 +28,7 @@ terraform state pull > terraform.tfstate
 ### View terraform state
 terraform show -json
 
+### Create kubectl alias
+alias k="kubectl --kubeconfig ansible/.kube/192.168.254.101/admin.conf"
+
 https://github.com/elasticdog/transcrypt
