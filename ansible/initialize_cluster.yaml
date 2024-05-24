@@ -81,10 +81,11 @@
     set_fact:
       join_command: "{{ join_command_raw.stdout_lines[0] }}"
 
-  - name: Install Weave Net
+  - name: Install CNI - Calico
     shell:
       cmd: |
-        kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
+        kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/calico.yaml
+    ignore_errors: true
     become_user: ubuntu
 
   - name: Install helm if not exists
