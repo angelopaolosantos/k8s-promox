@@ -248,7 +248,9 @@ resource "proxmox_virtual_environment_download_file" "latest_ubuntu_22_jammy_qco
   content_type = "iso"
   datastore_id = "local"
   node_name    = "pve01"
-  url          = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
+  // url          = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img" 
+  // Using latest image will destroy vms when file is changed. Prefer to use specific image.
+  url          = "https://cloud-images.ubuntu.com/jammy/20240710/jammy-server-cloudimg-amd64.img"
 }
 
 resource "random_password" "ubuntu_vm_password" {
