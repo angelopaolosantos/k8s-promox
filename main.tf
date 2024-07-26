@@ -251,6 +251,7 @@ resource "proxmox_virtual_environment_download_file" "latest_ubuntu_22_jammy_qco
   // url          = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img" 
   // Using latest image will destroy vms when file is changed. Prefer to use specific image.
   url          = "https://cloud-images.ubuntu.com/jammy/20240710/jammy-server-cloudimg-amd64.img"
+  upload_timeout = 4444 // seconds, make it longer to accomodate big files
 }
 
 resource "random_password" "ubuntu_vm_password" {
