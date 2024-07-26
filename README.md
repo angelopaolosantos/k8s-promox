@@ -15,15 +15,16 @@ ansible-galaxy collection install cloud.terraform
 ### Print Terraform Inventory
 ansible-inventory -i ./ansible/inventory.yaml --graph --vars
 
+### Download terraform state from backend
+If using backend on Terraform
+terraform state pull > terraform.tfstate
+
 ### Run Ansible Playbook
 export ANSIBLE_HOST_KEY_CHECKING=False
 ansible-playbook -i ./ansible/inventory.yaml ./ansible/playbook.yaml
 
 ### SSH into container
 ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i .ssh/my-private-key.pem root@192.168.254.214
-
-### Download terraform state from backend
-terraform state pull > terraform.tfstate
 
 ### View terraform state
 terraform show -json
