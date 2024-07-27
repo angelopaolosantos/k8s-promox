@@ -23,6 +23,9 @@ terraform state pull > terraform.tfstate
 export ANSIBLE_HOST_KEY_CHECKING=False
 ansible-playbook -i ./ansible/inventory.yaml ./ansible/playbook.yaml
 
+Run specific tasks of playbook
+ansible-playbook -i ./ansible/inventory.yaml ./ansible/playbook.yaml --tags "metallb,nfs"
+
 ### SSH into container
 ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i .ssh/my-private-key.pem root@192.168.254.214
 

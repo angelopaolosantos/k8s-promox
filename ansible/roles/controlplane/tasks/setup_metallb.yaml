@@ -1,0 +1,52 @@
+---
+# file: roles/controlplane/tasks/setup_metallb.yaml
+
+- name: check if strict ARP is enabled
+# see what changes would be made, returns nonzero returncode if different
+  shell:
+    cmd: |
+      kubectl get configmap kube-proxy -n kube-system -o yaml | \
+      sed -e "s/strictARP: false/strictARP: true/" | \
+      kubectl diff -f - -n kube-system
+  ignore_errors: true
+
+- name: Enable strict ARP
+# actually apply the changes, returns nonzero returncode on errors only
+  shell:
+    cmd: |
+      kubectl get configmap kube-proxy -n kube-system -o yaml | \
+      sed -e "s/strictARP: false/strictARP: true/" | \
+      kubectl apply -f - -n kube-system
+  ignore_errors: true
+
+# From repository
+- name: Add metallb chart repo
+  kubernetes.core.helm_repository:
+    name: metallb
+    repo_url: "https://metallb.github.io/metallb"
+
+- name: Deploy metallb chart
+  kubernetes.core.helm:
+    name: metallb
+    chart_ref: metallb/metallb
+    release_namespace: metallb-system
+    create_namespace: true
+    state: present # present | absent
+
+- name: Copy metallb-addresspool.yaml
+  ansible.builtin.copy:
+    src: manifests/metallb-addresspool.yaml
+    dest: ~/metallb-addresspool.yaml
+
+- name: Copy metallb-l2advertisement.yaml
+  ansible.builtin.copy:
+    src: manifests/metallb-l2advertisement.yaml
+    dest: ~/metallb-l2advertisement.yaml
+
+- name: Apply manifest- metallb-addresspool.yaml
+# actually apply the changes, returns nonzero returncode on errors only
+  shell: kubectl apply -f ./metallb-addresspool.yaml
+
+- name: Apply manifest - metallb-l2advertisement.yaml
+# actually apply the changes, returns nonzero returncode on errors only
+  shell: kubectl apply -f ./metallb-l2advertisement.yaml

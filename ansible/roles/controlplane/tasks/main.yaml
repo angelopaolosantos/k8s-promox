@@ -4,3 +4,12 @@
   import_tasks: setup_nfs_provisioner.yaml
   become: true
   become_user: ubuntu
+  tags:
+    - nfs
+
+- name: Setup metallb
+  import_tasks: setup_metallb.yaml
+  become: true
+  become_user: ubuntu
+  tags:
+    - metallb
