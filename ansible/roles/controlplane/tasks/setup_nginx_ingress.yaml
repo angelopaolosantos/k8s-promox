@@ -1,0 +1,17 @@
+---
+# file: roles/controlplane/tasks/setup_nginx_ingress.yaml
+
+- name: Add nginx-stable chart repo
+  kubernetes.core.helm_repository:
+    name: nginx-stable
+    repo_url: "https://helm.nginx.com/stable"
+
+- name: Deploy nginx-ingress
+  kubernetes.core.helm:
+    name: nginx-ingress
+    chart_ref: nginx-stable/nginx-ingress
+    release_namespace: nginx-ingress
+    create_namespace: true
+    state: present # present | absent
+    set_values:
+      - value: rbac.create=true

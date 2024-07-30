@@ -35,4 +35,7 @@ terraform show -json
 ### Create kubectl alias
 alias k="kubectl --kubeconfig ansible/.kube/192.168.254.101/admin.conf"
 
+### Argo CD initial password
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+
 https://github.com/elasticdog/transcrypt

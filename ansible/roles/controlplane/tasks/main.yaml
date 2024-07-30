@@ -13,3 +13,24 @@
   become_user: ubuntu
   tags:
     - metallb
+
+- name: Setup nginx-ingress
+  import_tasks: setup_nginx_ingress.yaml
+  become: true
+  become_user: ubuntu
+  tags:
+    - ingress
+
+- name: Setup argo-cd
+  import_tasks: setup_argocd.yaml
+  become: true
+  become_user: ubuntu
+  tags:
+    - argocd
+
+- name: Setup sealed-secrets
+  import_tasks: setup_sealed_secrets.yaml
+  become: true
+  become_user: ubuntu
+  tags:
+    - sealedsecrets

@@ -25,7 +25,7 @@
         --set nfs.path=/data
   ignore_errors: true
 
-- name: Copy nfs-test.yaml
+- name: Copy nfs_test.yaml
   ansible.builtin.copy:
-    src: manifests/nfs-test.yaml
-    dest: ~/nfs-test.yaml
+    src: manifests/nfs_test.yaml
+    dest: ~/nfs_test.yaml
