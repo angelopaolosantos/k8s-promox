@@ -1,0 +1,15 @@
+---
+# file: roles/controlplane/tasks/setup_prometheus.yaml
+
+- name: Add prometheus-community chart repo
+  kubernetes.core.helm_repository:
+    name: prometheus-community
+    repo_url: "https://prometheus-community.github.io/helm-charts"
+
+- name: Deploy prometheus-community
+  kubernetes.core.helm:
+    name: prometheus
+    chart_ref: prometheus-community/kube-prometheus-stack
+    release_namespace: prometheus
+    create_namespace: true
+    state: present # present | absent

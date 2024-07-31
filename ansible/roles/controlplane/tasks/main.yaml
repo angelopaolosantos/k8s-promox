@@ -34,3 +34,10 @@
   become_user: ubuntu
   tags:
     - sealedsecrets
+
+- name: Setup prometheus
+  import_tasks: setup_prometheus.yaml
+  become: true
+  become_user: ubuntu
+  tags:
+    - prometheus
