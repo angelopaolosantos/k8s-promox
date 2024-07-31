@@ -27,5 +27,5 @@
 
 - name: Copy nfs_test.yaml
   ansible.builtin.copy:
-    src: manifests/nfs_test.yaml
+    src: nfs/nfs_test.yaml
     dest: ~/nfs_test.yaml

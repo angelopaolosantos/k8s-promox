@@ -35,12 +35,12 @@
 
 - name: Copy metallb_addresspool.yaml
   ansible.builtin.copy:
-    src: manifests/metallb_addresspool.yaml
+    src: metallb/metallb_addresspool.yaml
     dest: ~/metallb_addresspool.yaml
 
 - name: Copy metallb_l2advertisement.yaml
   ansible.builtin.copy:
-    src: manifests/metallb_l2advertisement.yaml
+    src: metallb/metallb_l2advertisement.yaml
     dest: ~/metallb_l2advertisement.yaml
 
 - name: Apply manifest- metallb_addresspool.yaml

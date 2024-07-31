@@ -3,3 +3,5 @@ config.pg.tfbackend filter=crypt diff=crypt merge=crypt
 terraform.tfvars filter=crypt diff=crypt merge=crypt
 *.pem filter=crypt diff=crypt merge=crypt
 admin.conf filter=crypt diff=crypt merge=crypt
+*.key filter=crypt diff=crypt merge=crypt
+*.crt filter=crypt diff=crypt merge=crypt

@@ -3,7 +3,7 @@
 
 - name: Copy argocd-values.yaml
   ansible.builtin.copy:
-    src: manifests/argocd-values.yaml
+    src: argocd/argocd-values.yaml
     dest: ~/argocd-values.yaml
 
 - name: Add argo-helm chart repo
