@@ -1,0 +1,45 @@
+---
+# file: roles/controlplane/tasks/setup_linkerd.yaml
+
+- name: Add linkerd chart repo
+  kubernetes.core.helm_repository:
+    name: linkerd-edge
+    repo_url: "https://helm.linkerd.io/edge"
+
+- name: Deploy linkerd CRDs
+  kubernetes.core.helm:
+    name: linkerd-crds
+    chart_ref: linkerd-edge/linkerd-crds
+    release_namespace: linkerd
+    create_namespace: true
+    state: present # present | absent
+
+- name: Copy linkerd ca.crt
+  ansible.builtin.copy:
+    src: linkerd/ca.crt
+    dest: ~/ca.crt
+
+- name: Copy linkerd issuer.crt
+  ansible.builtin.copy:
+    src: linkerd/issuer.crt
+    dest: ~/issuer.crt
+
+- name: Copy linkerd issuer.key
+  ansible.builtin.copy:
+    src: linkerd/issuer.key
+    dest: ~/issuer.key
+
+- name: Deploy linkerd
+  kubernetes.core.helm:
+    name: linkerd-control-plane
+    chart_ref: linkerd-edge/linkerd-control-plane
+    release_namespace: linkerd
+    create_namespace: true
+    state: present # present | absent
+    set_values:
+      - value: identityTrustAnchorsPEM=ca.crt
+        value_type: file
+      - value: identity.issuer.tls.crtPEM=issuer.crt
+        value_type: file
+      - value: identity.issuer.tls.keyPEM=issuer.key
+        value_type: file

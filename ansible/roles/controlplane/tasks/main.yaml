@@ -41,3 +41,10 @@
   become_user: ubuntu
   tags:
     - prometheus
+
+- name: Setup linkerd
+  import_tasks: setup_linkerd.yaml
+  become: true
+  become_user: ubuntu
+  tags:
+    - linkerd
