@@ -7,25 +7,52 @@
       - tf_nfs_ip is defined
     fail_msg: "tf_nfs_ip is not defined in './ansible/tf_ansible_vars_file.yaml'"
 
-- name: Add nfs provisioner repo in helm
-  shell:
-    cmd: helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner
-
 - name: Wait for control-plane pods become ready
   shell: "kubectl wait --namespace=kube-system --for=condition=Ready pods --selector tier=control-plane --timeout=600s"
   register: control_plane_pods_ready
+  retries: 3
+  delay: 3
+  until: control_plane_pods_ready.rc == 0
 
-- name: Install nfs provisioner
-  shell:
-    cmd: |
-      helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
-        --create-namespace \
-        --namespace nfs-provisioner \
-        --set nfs.server={{ tf_nfs_ip }} \
-        --set nfs.path=/data
-  ignore_errors: true
+# - name: Add nfs provisioner repo in helm
+#   shell:
+#     cmd: helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner
+
+# - name: Install nfs provisioner
+#   shell:
+#     cmd: |
+#       helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
+#         --create-namespace \
+#         --namespace nfs-provisioner \
+#         --set nfs.server={{ tf_nfs_ip }} \
+#         --set nfs.path=/data
+#   ignore_errors: true
+
+- name: Add nfs-subdir-external-provisioner chart repo
+  kubernetes.core.helm_repository:
+    name: nfs-subdir-external-provisioner
+    repo_url: "https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner"
+
+- name: Deploy nfs provisioner
+  kubernetes.core.helm:
+    name: nfs-subdir-external-provisioner
+    chart_ref: nfs-subdir-external-provisioner/nfs-subdir-external-provisioner
+    release_namespace: nfs-provisioner
+    create_namespace: true
+    state: present # present | absent
+    set_values:
+      - value: nfs.server={{ tf_nfs_ip }}
+        value_type: string
+      - value: nfs.path=/data
+        value_type: string
+
+- name: ensures nfs dir exists
+  file: 
+    path: "./nfs"
+    state: directory
+    recurse: true
 
 - name: Copy nfs_test.yaml
   ansible.builtin.copy:
     src: nfs/nfs_test.yaml
-    dest: ~/nfs_test.yaml
+    dest: ~/nfs/nfs_test.yaml

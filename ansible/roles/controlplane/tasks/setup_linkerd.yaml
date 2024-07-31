@@ -14,20 +14,26 @@
     create_namespace: true
     state: present # present | absent
 
+- name: ensures linkerd dir exists
+  file: 
+    path: "./linkerd"
+    state: directory
+    recurse: true
+
 - name: Copy linkerd ca.crt
   ansible.builtin.copy:
     src: linkerd/ca.crt
-    dest: ~/ca.crt
+    dest: ~/linkerd/ca.crt
 
 - name: Copy linkerd issuer.crt
   ansible.builtin.copy:
     src: linkerd/issuer.crt
-    dest: ~/issuer.crt
+    dest: ~/linkerd/issuer.crt
 
 - name: Copy linkerd issuer.key
   ansible.builtin.copy:
     src: linkerd/issuer.key
-    dest: ~/issuer.key
+    dest: ~/linkerd/issuer.key
 
 - name: Deploy linkerd
   kubernetes.core.helm:
@@ -37,9 +43,9 @@
     create_namespace: true
     state: present # present | absent
     set_values:
-      - value: identityTrustAnchorsPEM=ca.crt
+      - value: identityTrustAnchorsPEM=linkerd/ca.crt
         value_type: file
-      - value: identity.issuer.tls.crtPEM=issuer.crt
+      - value: identity.issuer.tls.crtPEM=linkerd/issuer.crt
         value_type: file
-      - value: identity.issuer.tls.keyPEM=issuer.key
+      - value: identity.issuer.tls.keyPEM=linkerd/issuer.key
         value_type: file

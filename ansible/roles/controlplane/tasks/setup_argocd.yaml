@@ -1,10 +1,16 @@
 ---
 # file: roles/controlplane/tasks/setup_nginx_ingress.yaml
 
-- name: Copy argocd-values.yaml
+- name: ensures argocd dir exists
+  file: 
+    path: "./argocd"
+    state: directory
+    recurse: true
+
+- name: Copy values.yaml
   ansible.builtin.copy:
-    src: argocd/argocd-values.yaml
-    dest: ~/argocd-values.yaml
+    src: argocd/values.yaml
+    dest: ~/argocd/values.yaml
 
 - name: Add argo-helm chart repo
   kubernetes.core.helm_repository:
@@ -19,15 +25,15 @@
     create_namespace: true
     state: present # present | absent
     values_files:
-      - argocd_values.yaml
+      - argocd/values.yaml
 
 - name: Export values.yaml
   shell:
     cmd: |
-      helm show values argo/argo-cd > values.yaml
+      helm show values argo/argo-cd > argocd/values.yaml
 
 - name: Download values.yaml
   ansible.builtin.fetch:
-    src: values.yaml
-    dest: argocd/{{ inventory_hostname }}/
+    src: argocd/values.yaml
+    dest: fetch/{{ inventory_hostname }}/argocd/
     flat: yes

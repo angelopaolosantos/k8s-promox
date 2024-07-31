@@ -33,7 +33,7 @@ ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i .ssh/my-priva
 terraform show -json
 
 ### Create kubectl alias
-alias k="kubectl --kubeconfig ansible/.kube/192.168.254.101/admin.conf"
+alias k="kubectl --kubeconfig ansible/fetch/192.168.254.101/.kube/admin.conf"
 
 ### Argo CD initial password
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d

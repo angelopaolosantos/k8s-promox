@@ -60,7 +60,7 @@
   - name: Download admin.conf
     ansible.builtin.fetch:
       src: /etc/kubernetes/admin.conf
-      dest: .kube/{{ inventory_hostname }}/
+      dest: fetch/{{ inventory_hostname }}/.kube/
       flat: yes
 
   - name: Set .kube Directory Owner and Group to vagrant

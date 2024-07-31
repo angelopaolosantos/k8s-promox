@@ -33,20 +33,26 @@
     create_namespace: true
     state: present # present | absent
 
-- name: Copy metallb_addresspool.yaml
+- name: ensures metallb dir exists
+  file: 
+    path: "./metallb"
+    state: directory
+    recurse: true
+
+- name: Copy addresspool.yaml
   ansible.builtin.copy:
-    src: metallb/metallb_addresspool.yaml
-    dest: ~/metallb_addresspool.yaml
+    src: metallb/addresspool.yaml
+    dest: ~/metallb/addresspool.yaml
 
-- name: Copy metallb_l2advertisement.yaml
+- name: Copy l2advertisement.yaml
   ansible.builtin.copy:
-    src: metallb/metallb_l2advertisement.yaml
-    dest: ~/metallb_l2advertisement.yaml
+    src: metallb/l2advertisement.yaml
+    dest: ~/metallb/l2advertisement.yaml
 
-- name: Apply manifest- metallb_addresspool.yaml
+- name: Apply addresspool.yaml
 # actually apply the changes, returns nonzero returncode on errors only
-  shell: kubectl apply -f ./metallb_addresspool.yaml
+  shell: kubectl apply -f ./metallb/addresspool.yaml
 
-- name: Apply manifest - metallb_l2advertisement.yaml
+- name: Apply l2advertisement.yaml
 # actually apply the changes, returns nonzero returncode on errors only
-  shell: kubectl apply -f ./metallb_l2advertisement.yaml
+  shell: kubectl apply -f ./metallb/l2advertisement.yaml
