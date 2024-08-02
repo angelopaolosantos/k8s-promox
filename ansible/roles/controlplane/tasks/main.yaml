@@ -48,3 +48,10 @@
   become_user: ubuntu
   tags:
     - linkerd
+
+- name: Setup metrics-server
+  import_tasks: setup_metrics_server.yaml
+  become: true
+  become_user: ubuntu
+  tags:
+    - metrics-server
