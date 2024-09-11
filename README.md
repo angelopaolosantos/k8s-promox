@@ -39,3 +39,13 @@ alias k="kubectl --kubeconfig ansible/fetch/192.168.254.101/.kube/admin.conf"
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 
 https://github.com/elasticdog/transcrypt
+
+### Troubleshooting
+terraform refresh
+terraform state rm <resource_name>
+terraform apply -target=<resource_name>
+terraform destroy -target=<resource_name>
+terraform apply -replace=<resource_name>
+terraform force-unlock <lock_id>
+TF_LOG=DEBUG terraform apply
+

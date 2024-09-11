@@ -148,12 +148,12 @@ resource "proxmox_virtual_environment_vm" "worker_vm" {
   }
 
   cpu {
-    cores = 4
+    cores = 2
     type = "x86-64-v2-AES"
   }
 
   memory {
-    dedicated = 4096
+    dedicated = 2048
   }
 
   network_device {
@@ -223,7 +223,7 @@ resource "proxmox_virtual_environment_vm" "nfs_vm" {
   }
 
   cpu {
-    cores = 4
+    cores = 2
     type = "x86-64-v2-AES"
   }
 
@@ -248,9 +248,9 @@ resource "proxmox_virtual_environment_download_file" "latest_ubuntu_22_jammy_qco
   content_type = "iso"
   datastore_id = "local"
   node_name    = "pve01"
-  // url          = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img" 
+  url          = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img" 
   // Using latest image will destroy vms when file is changed. Prefer to use specific image.
-  url          = "https://cloud-images.ubuntu.com/jammy/20240710/jammy-server-cloudimg-amd64.img"
+  // url          = "https://cloud-images.ubuntu.com/jammy/20240710/jammy-server-cloudimg-amd64.img"
   upload_timeout = 4444 // seconds, make it longer to accomodate big files
 }
 
