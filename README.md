@@ -35,8 +35,15 @@ terraform show -json
 ### Create kubectl alias
 alias k="kubectl --kubeconfig ansible/fetch/192.168.254.101/.kube/admin.conf"
 
+### Create helm alias
+alias h="helm --kubeconfig ansible/fetch/192.168.254.101/.kube/admin.conf"
+
 ### Argo CD initial password
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+
+### Expose Argo CD
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+https://argo-cd.readthedocs.io/en/stable/getting_started/
 
 https://github.com/elasticdog/transcrypt
 
