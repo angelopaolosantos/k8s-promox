@@ -45,6 +45,9 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
 https://argo-cd.readthedocs.io/en/stable/getting_started/
 
+### Expose services using port-forward
+kubectl port-forward service/prometheus-grafana 3000:80 -n prometheus
+
 https://github.com/elasticdog/transcrypt
 
 ### Troubleshooting
