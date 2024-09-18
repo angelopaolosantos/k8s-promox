@@ -55,3 +55,10 @@
   become_user: ubuntu
   tags:
     - metrics-server
+
+- name: Setup keycloak
+  import_tasks: setup_keycloak.yaml
+  become: true
+  become_user: ubuntu
+  tags:
+    - keycloak

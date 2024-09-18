@@ -1,0 +1,18 @@
+---
+# file: roles/controlplane/tasks/setup_prometheus.yaml
+
+- name: Add codecentric chart repo
+  kubernetes.core.helm_repository:
+    name: codecentric
+    repo_url: "https://codecentric.github.io/helm-charts"
+
+- name: Deploy keycloak
+  kubernetes.core.helm:
+    name: keycloak
+    chart_ref: codecentric/keycloak
+    release_namespace: keycloak
+    create_namespace: true
+    state: present # present | absent
+    set_values:
+      - value: postgresql.global.storageClass="nfs-client" # same as helm install keycloak codecentric/keycloak --set postgresql.global.storageClass="nfs-client"
+        value_type: string

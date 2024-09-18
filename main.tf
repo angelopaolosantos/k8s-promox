@@ -77,7 +77,7 @@ resource "proxmox_virtual_environment_vm" "controlplane_vm" {
   }
 
   memory {
-    dedicated = 4096
+    dedicated = 8192
   }
 
   network_device {
@@ -148,12 +148,12 @@ resource "proxmox_virtual_environment_vm" "worker_vm" {
   }
 
   cpu {
-    cores = 2
+    cores = 4
     type = "x86-64-v2-AES"
   }
 
   memory {
-    dedicated = 2048
+    dedicated =8192
   }
 
   network_device {
@@ -223,12 +223,12 @@ resource "proxmox_virtual_environment_vm" "nfs_vm" {
   }
 
   cpu {
-    cores = 2
+    cores = 4
     type = "x86-64-v2-AES"
   }
 
   memory {
-    dedicated = 2048
+    dedicated = 4096
   }
 
   network_device {
