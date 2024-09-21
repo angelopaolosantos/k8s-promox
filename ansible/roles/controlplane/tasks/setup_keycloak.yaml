@@ -1,5 +1,7 @@
 ---
-# file: roles/controlplane/tasks/setup_prometheus.yaml
+# file: roles/controlplane/tasks/setup_keycloak.yaml
+
+# k create secret generic keycloak-ca-cert --from-file=/etc/kubernetes/pki/ca.crt -n keycloak
 
 - name: Add codecentric chart repo
   kubernetes.core.helm_repository:
@@ -12,7 +14,38 @@
     chart_ref: codecentric/keycloak
     release_namespace: keycloak
     create_namespace: true
-    state: present # present | absent
-    set_values:
-      - value: postgresql.global.storageClass="nfs-client" # same as helm install keycloak codecentric/keycloak --set postgresql.global.storageClass="nfs-client"
-        value_type: string
+    state: absent # present | absent
+    # set_values:
+    #  - value: postgresql.global.storageClass="nfs-client" # same as helm install keycloak codecentric/keycloak --set postgresql.global.storageClass="nfs-client"
+    #    value_type: string
+    values:
+      keycloak:
+        extraEnv: 
+          - name: KEYCLOAK_USER
+            value: "admin"
+          - name: KEYCLOAK_PASSWORD
+            value: "password"
+          - name: KEYCLOAK_FRONTEND_URL
+            value: "https://keycloak-https.keycloak.svc.cluster.local"  # Use HTTPS URL for internal access
+
+# Mount the CA certificate
+        volumeMounts:
+          - name: ca-cert
+            mountPath: /etc/ssl/certs/ca.crt
+            subPath: ca.crt
+
+        volumes:
+          - name: ca-cert
+            secret:
+              secretName: keycloak-ca-cert
+
+        service:
+          type: ClusterIP
+          ports:
+            http:
+              port: 8080
+            https:
+              port: 8443
+      postgresql:
+        global:
+          storageClass: "nfs-client"
