@@ -1,5 +1,7 @@
 # Generating the certificates with step
 
+You must generate these certificates to install linkerd via ansible or helm
+
 ## Install step-cli
 https://smallstep.com/docs/step-cli/installation/
 
@@ -15,7 +17,6 @@ step certificate create identity.linkerd.cluster.local issuer.crt issuer.key \
 --profile intermediate-ca --not-after 8760h --no-password --insecure \
 --ca ca.crt --ca-key ca.key
 ```
-
 
 ## Install the linkerd-crds chart
 ```
