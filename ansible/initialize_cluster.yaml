@@ -37,9 +37,9 @@
         # controlPlaneEndpoint: "api.example.com:6443" # Adjust as needed
         apiServer:
           extraArgs:
-            oidc-issuer-url: "https://keycloak-http.keycloak.svc.cluster.local/realms/k8s-realm"
+            oidc-issuer-url: "https://keycloak.deviantlab.duckdns.org/auth/realms/k8s-realm"
             oidc-client-id: "k8s-client"
-            oidc-ca-file: "/etc/kubernetes/pki/ca.crt"
+        #     oidc-ca-file: "/etc/kubernetes/pki/ca.crt"
             oidc-username-prefix: "oidc:"
             oidc-groups-prefix: "oidc:"
             oidc-username-claim: "preferred_username"

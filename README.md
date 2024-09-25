@@ -48,6 +48,16 @@ https://argo-cd.readthedocs.io/en/stable/getting_started/
 ### Expose services using port-forward
 kubectl port-forward service/prometheus-grafana 3000:80 -n prometheus
 
+### Keycloak
+https://keycloak.org/server/reverseproxy
+
+kubectl oidc-login setup \
+  --oidc-issuer-url=https://keycloak.deviantlab.duckdns.org/auth/realms/k8s-realm \
+  --oidc-client-id=k8s-client \
+  --oidc-client-secret=hPAvh3sdWqFZoqYAktHeTaoJWN404tzP
+
+### transcrypt
+Set before pulling repository
 https://github.com/elasticdog/transcrypt
 
 ### Troubleshooting
@@ -58,4 +68,6 @@ terraform destroy -target=<resource_name>
 terraform apply -replace=<resource_name>
 terraform force-unlock <lock_id>
 TF_LOG=DEBUG terraform apply
+
+
 
