@@ -13,5 +13,9 @@
     release_namespace: nginx-ingress
     create_namespace: true
     state: present # present | absent
-    set_values:
-      - value: rbac.create=true
+    values:
+      rbac:
+        create: true
+      controller:
+        podAnnotations:
+          "linkerd.io/inject": enabled
