@@ -14,8 +14,25 @@
     create_namespace: true
     state: present # present | absent
     values:
-      rbac:
-        create: true
       controller:
-        podAnnotations:
-          "linkerd.io/inject": enabled
+        # podAnnotations:
+        #   linkerd.io/inject: "enabled"
+        pod:
+          annotations:
+            linkerd.io/inject: "enabled"
+  register: helm_nginx
+
+- name: Show helm result
+  debug:
+    var: helm_nginx
+
+- name: Gather information of nginx-ingress chart inside nginx-ingress namespace
+  kubernetes.core.helm_info:
+    name: nginx-ingress
+    release_namespace: nginx-ingress
+    get_all_values: true
+  register: helm_info_output
+
+- name: Display Helm info output
+  debug:
+    var: helm_info_output
