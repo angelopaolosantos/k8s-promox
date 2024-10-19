@@ -19,7 +19,7 @@ resource "proxmox_virtual_environment_vm" "controlplane_vm" {
   count = var.controlplane_count
   name        = "controlplane-vm-${count.index+1}"
   description = "Managed by Terraform"
-  tags        = ["terraform", "ubuntu"]
+  tags        = ["terraform", "ubuntu", "k8s"]
 
   node_name = "pve01"
 
@@ -77,7 +77,7 @@ resource "proxmox_virtual_environment_vm" "controlplane_vm" {
   }
 
   memory {
-    dedicated = 8192
+    dedicated = 4096 // 8192
   }
 
   network_device {
@@ -95,7 +95,7 @@ resource "proxmox_virtual_environment_vm" "worker_vm" {
   count = var.worker_count
   name        = "worker-vm-${count.index+1}"
   description = "Managed by Terraform"
-  tags        = ["terraform", "ubuntu"]
+  tags        = ["terraform", "ubuntu", "k8s"]
 
   node_name = "pve01"
 
@@ -153,7 +153,7 @@ resource "proxmox_virtual_environment_vm" "worker_vm" {
   }
 
   memory {
-    dedicated =8192
+    dedicated = 4096 // 8192
   }
 
   network_device {
@@ -170,7 +170,7 @@ resource "proxmox_virtual_environment_vm" "worker_vm" {
 resource "proxmox_virtual_environment_vm" "nfs_vm" {
   name        = "nfs-vm"
   description = "Managed by Terraform"
-  tags        = ["terraform", "ubuntu"]
+  tags        = ["terraform", "ubuntu", "k8s"]
 
   node_name = "pve01"
 
@@ -223,7 +223,83 @@ resource "proxmox_virtual_environment_vm" "nfs_vm" {
   }
 
   cpu {
-    cores = 4
+    cores = 2
+    type = "x86-64-v2-AES"
+  }
+
+  memory {
+    dedicated = 4096
+  }
+
+  network_device {
+    bridge = "vmbr0"
+    model = "virtio"
+    # vlan_id = 10
+  }
+
+  operating_system {
+    type = "l26"
+  }
+
+}
+
+resource "proxmox_virtual_environment_vm" "load_balancer_vm" {
+  name        = "load-balancer-vm"
+  description = "Managed by Terraform"
+  tags        = ["terraform", "ubuntu", "k8s"]
+
+  node_name = "pve01"
+
+  agent {
+    # read 'Qemu guest agent' section, change to true only when ready
+    enabled = false
+  }
+
+  startup {
+    order      = "3"
+    up_delay   = "60"
+    down_delay = "60"
+  }
+
+  disk {
+    datastore_id = "local-zfs"
+    file_id      = proxmox_virtual_environment_download_file.latest_ubuntu_22_jammy_qcow2_img.id
+    interface    = "scsi0"
+    size = 100
+  }
+
+  initialization {
+    datastore_id = "local-zfs"
+
+    ip_config {
+      ipv4 {
+        address = "${var.load_balancer_ips[0]}/${var.network_range}"
+        gateway = var.gateway
+      }
+    }
+
+    user_account {
+      keys     = [trimspace(tls_private_key.ubuntu_private_key.public_key_openssh)]
+      # password = random_password.ubuntu_vm_password.result
+      password = "mypassword"
+      username = var.vm_user
+    }
+
+    interface = "ide2"
+  }
+
+  machine = "q35"
+
+  bios = "ovmf"
+
+  efi_disk {
+    datastore_id = "local-zfs"
+    file_format = "raw"
+    type = "4m"
+  }
+
+  cpu {
+    cores = 2
     type = "x86-64-v2-AES"
   }
 
