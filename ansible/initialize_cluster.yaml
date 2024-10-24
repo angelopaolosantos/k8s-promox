@@ -1,4 +1,4 @@
-- hosts: controlplanes
+- hosts: controlplane-1
   become: true
   tasks:
 
@@ -18,7 +18,32 @@
     failed_when: false
     changed_when: false
 
-  - name: Copy cluster config into /etc/kubernetes
+  - name: Generate certificate key
+    shell: |
+      kubeadm certs certificate-key > /var/tmp/init-config-cert-key
+    args:
+      creates: /var/tmp/init-config-cert-key
+
+  - name: Generate certificate key
+    fetch: 
+      src: /var/tmp/init-config-cert-key
+      dest: fetch/{{ inventory_hostname }}/init-cluster/init-config-cert-key
+      flat: yes
+
+  - name: register cert key
+    slurp:
+      src: /var/tmp/init-config-cert-key
+    register: init_config_cert_key
+
+  - name: Print returned information
+    ansible.builtin.debug:
+      msg: "{{ init_config_cert_key.content | b64decode }}"
+
+  - name: Set cert key
+    set_fact:
+      cert_key: "{{ init_config_cert_key.content | b64decode }}"
+  
+  - name: Copy cluster config into /opt/cluster-config.yaml
     copy:
       dest: "/opt/cluster-config.yaml"
       content: |
@@ -27,6 +52,7 @@
         localAPIEndpoint:
           advertiseAddress: 192.168.254.101
           bindPort: 6443
+        certificateKey: {{ init_config_cert_key.content | b64decode }}
         ---
         apiVersion: kubeadm.k8s.io/v1beta3
         kind: ClusterConfiguration
@@ -34,7 +60,7 @@
           serviceSubnet: "10.100.0.0/16"
           podSubnet: "10.244.0.0/16"
         # kubernetesVersion: stable
-        # controlPlaneEndpoint: "api.example.com:6443" # Adjust as needed
+        controlPlaneEndpoint: "192.168.254.110:6443" # Adjust as needed, usually an external load balancer
         apiServer:
           extraArgs:
             oidc-issuer-url: "https://keycloak.deviantlab.duckdns.org/auth/realms/k8s-realm"
@@ -60,7 +86,7 @@
         cgroupDriver: systemd
 
   - name: Initialize Cluster
-    shell: kubeadm init --config /opt/cluster-config.yaml
+    shell: kubeadm init --config /opt/cluster-config.yaml --upload-certs
     when: kubeadm_status.stdout == "0"
 
   - debug: var=kubeadm_status.stdout_lines
@@ -121,14 +147,23 @@
     args:
       creates: /usr/local/bin/helm
 
+- hosts: controlplane-2
+  become: true
+  tasks:
+  - name: join cluster
+    shell: |
+      echo "{{ hostvars['192.168.254.101'].join_command }} --control-plane --certificate-key {{ hostvars['192.168.254.101'].cert_key }}" >> /opt/node_joined.txt
+      {{ hostvars['192.168.254.101'].join_command }} --control-plane --certificate-key {{ hostvars['192.168.254.101'].cert_key }}
+    args:
+      creates: /opt/node_joined.txt # Runs task only once since file is created once
+
 - hosts: workers
   become: true
   tasks:
   - name: join cluster
-    shell: "{{ hostvars['192.168.254.101'].join_command }} >> node_joined.txt"
+    shell: "{{ hostvars['192.168.254.101'].join_command }} >> /opt/node_joined.txt"
     args:
-      chdir: $HOME
-      creates: node_joined.txt # Runs task only once since file is created once
+      creates: /opt/node_joined.txt # Runs task only once since file is created once
   
 - name: Fix Nodes NotReady Status
   hosts: cluster

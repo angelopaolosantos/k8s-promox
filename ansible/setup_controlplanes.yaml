@@ -1,4 +1,4 @@
-- hosts: controlplanes
+- hosts: controlplane-1
   vars_files:
     - tf_ansible_vars_file.yaml
   roles:

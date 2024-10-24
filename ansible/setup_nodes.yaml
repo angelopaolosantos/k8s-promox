@@ -10,3 +10,7 @@
     - tf_ansible_vars_file.yaml
   roles:
     - nfs
+
+- hosts: load_balancers
+  roles:
+    - load_balancer

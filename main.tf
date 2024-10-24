@@ -244,7 +244,8 @@ resource "proxmox_virtual_environment_vm" "nfs_vm" {
 }
 
 resource "proxmox_virtual_environment_vm" "load_balancer_vm" {
-  name        = "load-balancer-vm"
+  count = var.load_balancer_count
+  name        = "load-balancer-vm-${count.index+1}"
   description = "Managed by Terraform"
   tags        = ["terraform", "ubuntu", "k8s"]
 
@@ -265,7 +266,7 @@ resource "proxmox_virtual_environment_vm" "load_balancer_vm" {
     datastore_id = "local-zfs"
     file_id      = proxmox_virtual_environment_download_file.latest_ubuntu_22_jammy_qcow2_img.id
     interface    = "scsi0"
-    size = 100
+    size = 25
   }
 
   initialization {
@@ -273,7 +274,7 @@ resource "proxmox_virtual_environment_vm" "load_balancer_vm" {
 
     ip_config {
       ipv4 {
-        address = "${var.load_balancer_ips[0]}/${var.network_range}"
+        address = "${var.load_balancer_ips[count.index]}/${var.network_range}"
         gateway = var.gateway
       }
     }
@@ -299,12 +300,12 @@ resource "proxmox_virtual_environment_vm" "load_balancer_vm" {
   }
 
   cpu {
-    cores = 2
+    cores = 4
     type = "x86-64-v2-AES"
   }
 
   memory {
-    dedicated = 4096
+    dedicated = 4096 // 8192
   }
 
   network_device {
@@ -338,9 +339,9 @@ resource "random_password" "ubuntu_vm_password" {
 
 # Ansible Section 
 
-resource "ansible_host" "kubemaster" {
+resource "ansible_host" "controlplane" {
   name   = var.controlplane_ips[count.index]
-  groups = ["controlplanes"]
+  groups = ["controlplanes","controlplane-${count.index+1}"]
 
   variables = {
     ansible_user                 = var.vm_user
@@ -357,9 +358,9 @@ resource "ansible_host" "kubemaster" {
   depends_on = [ ansible_host.nfs ] 
 }
 
-resource "ansible_host" "kubenode" {
+resource "ansible_host" "worker" {
   name   = var.worker_ips[count.index]
-  groups = ["workers"]
+  groups = ["workers","worker-${count.index+1}"]
 
   variables = {
     ansible_user                 = var.vm_user
@@ -387,6 +388,21 @@ resource "ansible_host" "nfs" {
     greetings                    = "from host!"
     some                         = "variable"
     private_ip                   = var.nfs_ips[0]
+  }
+}
+
+resource "ansible_host" "load_balancer" {
+  name   = var.load_balancer_ips[count.index]
+  groups = ["load_balancers","load_balancer-${count.index+1}"]
+  count = var.load_balancer_count
+  variables = {
+    ansible_user                 = var.vm_user
+    ansible_ssh_private_key_file = "./.ssh/my-private-key.pem"
+    ansible_python_interpreter   = "/usr/bin/python3"
+    host_name                    = proxmox_virtual_environment_vm.load_balancer_vm[count.index].name 
+    greetings                    = "from host!"
+    some                         = "variable"
+    private_ip                   = var.load_balancer_ips[count.index]
   }
 }
 

@@ -1,0 +1,53 @@
+- name: Update apt and install containerd
+  apt:
+    update_cache: yes
+    pkg:
+      - keepalived
+
+- name: Copy config into /etc/keepalived/keepalived.conf
+  copy:
+    dest: "/etc/keepalived/keepalived.conf"
+    content: |
+      global_defs {
+          script_user root
+          enable_script_security
+      }
+
+      vrrp_script chk_haproxy {
+          script "killall -0 haproxy"   # Check if HAProxy process is running
+          interval 2                    # Check every 2 seconds
+          weight 2                      # Weight to influence master election
+      }
+
+      vrrp_instance VI_1 {
+          state MASTER
+          interface eth0                 # Network interface to bind to
+          virtual_router_id 51
+          priority 101                   # Higher priority on the primary server
+          authentication {
+              auth_type PASS
+              auth_pass Klb29d2g     # Set a strong authentication password
+          }
+          unicast_src_ip 192.168.254.106      # The IP address of this machine
+          unicast_peer {
+              192.168.254.107                        # The IP address of peer machines
+          }
+          virtual_ipaddress {
+              192.168.254.110/24              # Your VIP address
+          }
+          track_script {
+              chk_haproxy
+          }
+      }
+
+- name: Restart keepalived service
+  ansible.builtin.systemd:
+    name: keepalived
+    state: restarted
+
+- name: Check Keepalived configuration
+  shell: "keepalived -t"
+  register: keepalived_result
+
+- debug: var=keepalived_result.stdout_lines
+

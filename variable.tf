@@ -64,6 +64,11 @@ variable "worker_count" {
   default = 2
 }
 
+variable "load_balancer_count" {
+  type = number
+  default = 1
+}
+
 variable "network_range" {
     type = string
     default = "24"

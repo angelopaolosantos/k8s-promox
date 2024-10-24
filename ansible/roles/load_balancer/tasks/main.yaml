@@ -1,0 +1,9 @@
+# roles/load_balancer/tasks/main.yml
+
+- name: Setup HAProxy
+  import_tasks: setup_haproxy.yaml
+  become: true
+
+- name: Setup Keepalived
+  import_tasks: setup_keepalived.yaml
+  become: true
