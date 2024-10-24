@@ -28,12 +28,12 @@
               auth_type PASS
               auth_pass Klb29d2g     # Set a strong authentication password
           }
-          unicast_src_ip 192.168.254.106      # The IP address of this machine
+          unicast_src_ip {{ ansible_default_ipv4.address }}     # The IP address of this machine
           unicast_peer {
-              192.168.254.107                        # The IP address of peer machines
+              {{ tf_load_balancer_ip[1] }}                        # The IP address of peer machines
           }
           virtual_ipaddress {
-              192.168.254.110/24              # Your VIP address
+              {{ tf_load_balancer_vip }}              # Your VIP address
           }
           track_script {
               chk_haproxy

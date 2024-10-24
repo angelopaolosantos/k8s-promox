@@ -147,7 +147,7 @@
     args:
       creates: /usr/local/bin/helm
 
-- hosts: controlplane-2
+- hosts: controlplane-2, controlplane-3
   become: true
   tasks:
   - name: join cluster

@@ -23,7 +23,8 @@ variable "controlplane_ips" {
     type = list(string)
     default = [
         "192.168.254.101",
-        "192.168.254.102"
+        "192.168.254.102",
+        "192.168.254.107"
     ]
 }
 
@@ -46,7 +47,13 @@ variable "load_balancer_ips" {
     type = list(string)
     default = [
         "192.168.254.106",
+        "192.168.254.108",
     ]
+}
+
+variable "load_balancer_vip" {
+    type = string
+    default = "192.168.254.110/24"
 }
 
 variable "nfs_allowed_access_ip" {
@@ -56,7 +63,7 @@ variable "nfs_allowed_access_ip" {
 
 variable "controlplane_count" {
     type = number
-    default = 2
+    default = 3
 }
 
 variable "worker_count" {
