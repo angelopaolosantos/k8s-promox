@@ -5,3 +5,4 @@ terraform.tfvars filter=crypt diff=crypt merge=crypt
 admin.conf filter=crypt diff=crypt merge=crypt
 *.key filter=crypt diff=crypt merge=crypt
 *.crt filter=crypt diff=crypt merge=crypt
+init-config-cert-key filter=crypt diff=crypt merge=crypt
