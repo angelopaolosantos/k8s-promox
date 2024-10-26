@@ -92,38 +92,56 @@ Delete all created infastructure.
 
 ##### Useful commands to know:
 Print Terraform Inventory
-`ansible-inventory -i ./ansible/inventory.yaml --graph --vars`
+```
+ansible-inventory -i ./ansible/inventory.yaml --graph --vars
+```
 
 Run specific tasks of ansible playbook
-`ansible-playbook -i ./ansible/inventory.yaml ./ansible/playbook.yaml --tags "metallb,nfs"`
+```
+ansible-playbook -i ./ansible/inventory.yaml ./ansible/playbook.yaml --tags "metallb,nfs"
+```
 
 SSH into container
-`ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i .ssh/my-private-key.pem ubuntu@192.168.254.101`
+```
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i .ssh/my-private-key.pem ubuntu@192.168.254.101
+```
 
 Download terraform state from backend
-`terraform state pull > terraform.tfstate`
+```
+terraform state pull > terraform.tfstate
+```
 
 View terraform state
-`terraform show -json`
+```
+terraform show -json
+```
 
 Create kubectl alias
-`alias k="kubectl --kubeconfig ansible/fetch/192.168.254.101/.kube/admin.conf"`
+```
+alias k="kubectl --kubeconfig ansible/fetch/192.168.254.101/.kube/admin.conf"
+```
 
 Create helm alias
-`alias h="helm --kubeconfig ansible/fetch/192.168.254.101/.kube/admin.conf"`
+```
+alias h="helm --kubeconfig ansible/fetch/192.168.254.101/.kube/admin.conf"
+```
 
 Argo CD initial password
-`kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`
+```
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+```
 
 Expose [Argo CD](https://argo-cd.readthedocs.io/en/stable/getting_started/)
-`kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'`
-
+```
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+```
 
 Expose services using port-forward
-`kubectl port-forward service/prometheus-grafana 3000:80 -n prometheus`
+```
+kubectl port-forward service/prometheus-grafana 3000:80 -n prometheus
+```
 
 [Keycloak](https://keycloak.org/server/reverseproxy) and oidc-login
-
 
 ```
 kubectl oidc-login setup \
