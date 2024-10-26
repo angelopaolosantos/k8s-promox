@@ -30,7 +30,9 @@ Follow prompts to set your secret key.
 Transcrypt will encrypt and decrypt files listed in .gitattributes to git.  
 
 Install the [Terraform Collection][terraform-collection] using ansible galaxy.
-`ansible-galaxy collection install cloud.terraform`
+```
+ansible-galaxy collection install cloud.terraform
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
