@@ -38,13 +38,13 @@ ansible-galaxy collection install cloud.terraform
 
 ### Step 1 - Provisioning the kubernetes cluster infastructure
 
-Create a terraform.tfvars file with the access credentials of your proxmox server. Fill out the values for 
+Create a terraform.tfvars file with the access credentials of your proxmox server. Enter values for 
 * proxmox_endpoint
 * proxmox_username
 * proxmox_password
 
 I'm using postgres as a terraform backend. This is optional. You may use your preferred backend. 
-Create a config.pg.tfbackend file with access credentials to a postresql server. Fill our values for
+Create a config.pg.tfbackend file with access credentials to a postresql server. Enter values for
 * conn_str
 * schema_name
 
