@@ -15,3 +15,4 @@
 - import_playbook: setup_nodes.yaml
 - import_playbook: initialize_cluster.yaml
 - import_playbook: setup_controlplanes.yaml
+- import_playbook: setup_applications.yaml

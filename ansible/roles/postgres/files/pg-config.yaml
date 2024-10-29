@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pg
+spec: {}
+status: {}
+---
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/basic-auth
+metadata:
+  name: pg-superuser
+  namespace: pg
+data:
+  password: c2VjcmV0X3Bhc3N3b3Jk #secret_password
+  username: cG9zdGdyZXM= #postgres - Note: It NEEDs to be postgres
+---
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/basic-auth
+metadata:
+  name: pg-app-user
+  namespace: pg
+data:
+  password: c2VjcmV0X3Bhc3N3b3Jk #secret_password
+  username: YXBwX3VzZXI= #app_user
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: my-pgsql-cluster
+  namespace: pg
+spec:
+  description: "My example pg cluster"
+  imageName: ghcr.io/cloudnative-pg/postgresql:15.1
+  instances: 3
+
+  superuserSecret:
+    name: pg-superuser
+  enableSuperuserAccess: true
+
+  startDelay: 30
+  stopDelay: 100
+  primaryUpdateStrategy: unsupervised
+
+  logLevel: debug
+
+  postgresql:
+    parameters:
+      max_connections: '200'
+      shared_buffers: '256MB'
+      effective_cache_size: '768MB'
+      maintenance_work_mem: '64MB'
+      checkpoint_completion_target: '0.9'
+      wal_buffers: '7864kB'
+      default_statistics_target: '100'
+      random_page_cost: '1.1'
+      effective_io_concurrency: '200'
+      work_mem: '655kB'
+      huge_pages: 'off'
+      min_wal_size: '1GB'
+      max_wal_size: '4GB'
+
+    pg_hba:
+    - host all all 192.168.0.0/16 scram-sha-256
+
+  bootstrap:
+    initdb:
+      database: my_app_db
+      owner: app_user
+      secret:
+        name: pg-app-user
+      postInitApplicationSQL:
+        - create schema my_app
+
+  storage:
+    size: 10Gi
+    storageClass: nfs-client

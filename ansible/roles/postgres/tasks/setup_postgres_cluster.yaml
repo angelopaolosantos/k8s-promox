@@ -1,0 +1,39 @@
+---
+# file: roles/postgres/tasks/setup_postgress_cluster.yaml
+
+- name: ensures postgres dir exists
+  file: 
+    path: "./postgres"
+    state: directory
+    recurse: true
+
+- name: Copy pg-config.yaml
+  ansible.builtin.copy:
+    src: ./pg-config.yaml
+    dest: ~/postgres/pg-config.yaml
+
+- name: Copy pg-operator-manifests.yaml
+  ansible.builtin.copy:
+    src: ./pg-operator-manifests.yaml
+    dest: ~/postgres/pg-operator-manifests.yaml
+
+- name: Run kubectl create
+  shell:
+    cmd: |
+      kubectl create -f ~/postgres/pg-config.yaml
+      kubectl create -f ~/postgres/pg-operator-manifests.yaml
+  ignore_errors: true
+  register: kubectl_create_result
+
+- debug: var=kubectl_create_result.stdout_lines
+
+- name: Run kubectl apply
+  shell:
+    cmd: |
+      kubectl apply -f ~/postgres/pg-config.yaml
+      kubectl apply -f ~/postgres/pg-operator-manifests.yaml
+  ignore_errors: true
+  register: kubectl_apply_result
+
+- debug: var=kubectl_apply_result.stdout_lines
+

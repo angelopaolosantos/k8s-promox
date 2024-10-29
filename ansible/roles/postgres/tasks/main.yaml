@@ -1,0 +1,8 @@
+# roles/postgres/tasks/main.yml
+
+- name: Setup HA postgres cluster
+  import_tasks: setup_postgres_cluster.yaml
+  become: true
+  become_user: ubuntu
+  tags:
+    - postgres

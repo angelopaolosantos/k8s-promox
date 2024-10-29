@@ -1,0 +1,7 @@
+---
+# file: setup_nodes.yaml
+
+# Install HA Postgres Cluster
+- hosts: controlplane-1
+  roles:
+    - postgres
