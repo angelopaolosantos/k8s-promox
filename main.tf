@@ -149,11 +149,12 @@ resource "proxmox_virtual_environment_vm" "worker_vm" {
 
   cpu {
     cores = 4
-    type = "x86-64-v2-AES"
+    type = "host"
+    // type = "x86-64-v2-AES"
   }
 
   memory {
-    dedicated = 4096 // 8192
+    dedicated =  8192 // 4096
   }
 
   network_device {
