@@ -1,0 +1,52 @@
+KIND:       ResourceQuota
+VERSION:    v1
+
+DESCRIPTION:
+    ResourceQuota sets aggregate quota restrictions enforced per namespace
+    
+FIELDS:
+  apiVersion	<string>
+  kind	<string>
+  metadata	<ObjectMeta>
+    annotations	<map[string]string>
+    creationTimestamp	<string>
+    deletionGracePeriodSeconds	<integer>
+    deletionTimestamp	<string>
+    finalizers	<[]string>
+    generateName	<string>
+    generation	<integer>
+    labels	<map[string]string>
+    managedFields	<[]ManagedFieldsEntry>
+      apiVersion	<string>
+      fieldsType	<string>
+      fieldsV1	<FieldsV1>
+      manager	<string>
+      operation	<string>
+      subresource	<string>
+      time	<string>
+    name	<string>
+    namespace	<string>
+    ownerReferences	<[]OwnerReference>
+      apiVersion	<string> -required-
+      blockOwnerDeletion	<boolean>
+      controller	<boolean>
+      kind	<string> -required-
+      name	<string> -required-
+      uid	<string> -required-
+    resourceVersion	<string>
+    selfLink	<string>
+    uid	<string>
+  spec	<ResourceQuotaSpec>
+    hard	<map[string]Quantity>
+    scopeSelector	<ScopeSelector>
+      matchExpressions	<[]ScopedResourceSelectorRequirement>
+        operator	<string> -required-
+        enum: DoesNotExist, Exists, In, NotIn
+        scopeName	<string> -required-
+        enum: BestEffort, CrossNamespacePodAffinity, NotBestEffort, NotTerminating, ....
+        values	<[]string>
+    scopes	<[]string>
+  status	<ResourceQuotaStatus>
+    hard	<map[string]Quantity>
+    used	<map[string]Quantity>
+

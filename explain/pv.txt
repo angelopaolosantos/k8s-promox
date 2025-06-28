@@ -1,0 +1,242 @@
+KIND:       PersistentVolume
+VERSION:    v1
+
+DESCRIPTION:
+    PersistentVolume (PV) is a storage resource provisioned by an administrator.
+    It is analogous to a node. More info:
+    https://kubernetes.io/docs/concepts/storage/persistent-volumes
+    
+FIELDS:
+  apiVersion	<string>
+  kind	<string>
+  metadata	<ObjectMeta>
+    annotations	<map[string]string>
+    creationTimestamp	<string>
+    deletionGracePeriodSeconds	<integer>
+    deletionTimestamp	<string>
+    finalizers	<[]string>
+    generateName	<string>
+    generation	<integer>
+    labels	<map[string]string>
+    managedFields	<[]ManagedFieldsEntry>
+      apiVersion	<string>
+      fieldsType	<string>
+      fieldsV1	<FieldsV1>
+      manager	<string>
+      operation	<string>
+      subresource	<string>
+      time	<string>
+    name	<string>
+    namespace	<string>
+    ownerReferences	<[]OwnerReference>
+      apiVersion	<string> -required-
+      blockOwnerDeletion	<boolean>
+      controller	<boolean>
+      kind	<string> -required-
+      name	<string> -required-
+      uid	<string> -required-
+    resourceVersion	<string>
+    selfLink	<string>
+    uid	<string>
+  spec	<PersistentVolumeSpec>
+    accessModes	<[]string>
+    awsElasticBlockStore	<AWSElasticBlockStoreVolumeSource>
+      fsType	<string>
+      partition	<integer>
+      readOnly	<boolean>
+      volumeID	<string> -required-
+    azureDisk	<AzureDiskVolumeSource>
+      cachingMode	<string>
+      enum: None, ReadOnly, ReadWrite
+      diskName	<string> -required-
+      diskURI	<string> -required-
+      fsType	<string>
+      kind	<string>
+      enum: Dedicated, Managed, Shared
+      readOnly	<boolean>
+    azureFile	<AzureFilePersistentVolumeSource>
+      readOnly	<boolean>
+      secretName	<string> -required-
+      secretNamespace	<string>
+      shareName	<string> -required-
+    capacity	<map[string]Quantity>
+    cephfs	<CephFSPersistentVolumeSource>
+      monitors	<[]string> -required-
+      path	<string>
+      readOnly	<boolean>
+      secretFile	<string>
+      secretRef	<SecretReference>
+        name	<string>
+        namespace	<string>
+      user	<string>
+    cinder	<CinderPersistentVolumeSource>
+      fsType	<string>
+      readOnly	<boolean>
+      secretRef	<SecretReference>
+        name	<string>
+        namespace	<string>
+      volumeID	<string> -required-
+    claimRef	<ObjectReference>
+      apiVersion	<string>
+      fieldPath	<string>
+      kind	<string>
+      name	<string>
+      namespace	<string>
+      resourceVersion	<string>
+      uid	<string>
+    csi	<CSIPersistentVolumeSource>
+      controllerExpandSecretRef	<SecretReference>
+        name	<string>
+        namespace	<string>
+      controllerPublishSecretRef	<SecretReference>
+        name	<string>
+        namespace	<string>
+      driver	<string> -required-
+      fsType	<string>
+      nodeExpandSecretRef	<SecretReference>
+        name	<string>
+        namespace	<string>
+      nodePublishSecretRef	<SecretReference>
+        name	<string>
+        namespace	<string>
+      nodeStageSecretRef	<SecretReference>
+        name	<string>
+        namespace	<string>
+      readOnly	<boolean>
+      volumeAttributes	<map[string]string>
+      volumeHandle	<string> -required-
+    fc	<FCVolumeSource>
+      fsType	<string>
+      lun	<integer>
+      readOnly	<boolean>
+      targetWWNs	<[]string>
+      wwids	<[]string>
+    flexVolume	<FlexPersistentVolumeSource>
+      driver	<string> -required-
+      fsType	<string>
+      options	<map[string]string>
+      readOnly	<boolean>
+      secretRef	<SecretReference>
+        name	<string>
+        namespace	<string>
+    flocker	<FlockerVolumeSource>
+      datasetName	<string>
+      datasetUUID	<string>
+    gcePersistentDisk	<GCEPersistentDiskVolumeSource>
+      fsType	<string>
+      partition	<integer>
+      pdName	<string> -required-
+      readOnly	<boolean>
+    glusterfs	<GlusterfsPersistentVolumeSource>
+      endpoints	<string> -required-
+      endpointsNamespace	<string>
+      path	<string> -required-
+      readOnly	<boolean>
+    hostPath	<HostPathVolumeSource>
+      path	<string> -required-
+      type	<string>
+      enum: "", BlockDevice, CharDevice, Directory, ....
+    iscsi	<ISCSIPersistentVolumeSource>
+      chapAuthDiscovery	<boolean>
+      chapAuthSession	<boolean>
+      fsType	<string>
+      initiatorName	<string>
+      iqn	<string> -required-
+      iscsiInterface	<string>
+      lun	<integer> -required-
+      portals	<[]string>
+      readOnly	<boolean>
+      secretRef	<SecretReference>
+        name	<string>
+        namespace	<string>
+      targetPortal	<string> -required-
+    local	<LocalVolumeSource>
+      fsType	<string>
+      path	<string> -required-
+    mountOptions	<[]string>
+    nfs	<NFSVolumeSource>
+      path	<string> -required-
+      readOnly	<boolean>
+      server	<string> -required-
+    nodeAffinity	<VolumeNodeAffinity>
+      required	<NodeSelector>
+        nodeSelectorTerms	<[]NodeSelectorTerm> -required-
+          matchExpressions	<[]NodeSelectorRequirement>
+            key	<string> -required-
+            operator	<string> -required-
+            enum: DoesNotExist, Exists, Gt, In, ....
+            values	<[]string>
+          matchFields	<[]NodeSelectorRequirement>
+            key	<string> -required-
+            operator	<string> -required-
+            enum: DoesNotExist, Exists, Gt, In, ....
+            values	<[]string>
+    persistentVolumeReclaimPolicy	<string>
+    enum: Delete, Recycle, Retain
+    photonPersistentDisk	<PhotonPersistentDiskVolumeSource>
+      fsType	<string>
+      pdID	<string> -required-
+    portworxVolume	<PortworxVolumeSource>
+      fsType	<string>
+      readOnly	<boolean>
+      volumeID	<string> -required-
+    quobyte	<QuobyteVolumeSource>
+      group	<string>
+      readOnly	<boolean>
+      registry	<string> -required-
+      tenant	<string>
+      user	<string>
+      volume	<string> -required-
+    rbd	<RBDPersistentVolumeSource>
+      fsType	<string>
+      image	<string> -required-
+      keyring	<string>
+      monitors	<[]string> -required-
+      pool	<string>
+      readOnly	<boolean>
+      secretRef	<SecretReference>
+        name	<string>
+        namespace	<string>
+      user	<string>
+    scaleIO	<ScaleIOPersistentVolumeSource>
+      fsType	<string>
+      gateway	<string> -required-
+      protectionDomain	<string>
+      readOnly	<boolean>
+      secretRef	<SecretReference> -required-
+        name	<string>
+        namespace	<string>
+      sslEnabled	<boolean>
+      storageMode	<string>
+      storagePool	<string>
+      system	<string> -required-
+      volumeName	<string>
+    storageClassName	<string>
+    storageos	<StorageOSPersistentVolumeSource>
+      fsType	<string>
+      readOnly	<boolean>
+      secretRef	<ObjectReference>
+        apiVersion	<string>
+        fieldPath	<string>
+        kind	<string>
+        name	<string>
+        namespace	<string>
+        resourceVersion	<string>
+        uid	<string>
+      volumeName	<string>
+      volumeNamespace	<string>
+    volumeAttributesClassName	<string>
+    volumeMode	<string>
+    enum: Block, Filesystem
+    vsphereVolume	<VsphereVirtualDiskVolumeSource>
+      fsType	<string>
+      storagePolicyID	<string>
+      storagePolicyName	<string>
+      volumePath	<string> -required-
+  status	<PersistentVolumeStatus>
+    lastPhaseTransitionTime	<string>
+    message	<string>
+    phase	<string>
+    enum: Available, Bound, Failed, Pending, ....
+    reason	<string>
+

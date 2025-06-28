@@ -123,6 +123,11 @@ Create kubectl alias
 alias k="kubectl --kubeconfig ansible/fetch/192.168.254.101/.kube/admin.conf"
 ```
 
+Create k9s alias
+```
+alias k9x="k9s --kubeconfig ansible/fetch/192.168.254.101/.kube/admin.conf"
+```
+
 Create helm alias
 ```
 alias h="helm --kubeconfig ansible/fetch/192.168.254.101/.kube/admin.conf"

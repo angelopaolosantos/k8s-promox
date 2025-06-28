@@ -1,0 +1,56 @@
+GROUP:      storage.k8s.io
+KIND:       StorageClass
+VERSION:    v1
+
+DESCRIPTION:
+    StorageClass describes the parameters for a class of storage for which
+    PersistentVolumes can be dynamically provisioned.
+    
+    StorageClasses are non-namespaced; the name of the storage class according
+    to etcd is in ObjectMeta.Name.
+    
+FIELDS:
+  allowVolumeExpansion	<boolean>
+  allowedTopologies	<[]TopologySelectorTerm>
+    matchLabelExpressions	<[]TopologySelectorLabelRequirement>
+      key	<string> -required-
+      values	<[]string> -required-
+  apiVersion	<string>
+  kind	<string>
+  metadata	<ObjectMeta>
+    annotations	<map[string]string>
+    creationTimestamp	<string>
+    deletionGracePeriodSeconds	<integer>
+    deletionTimestamp	<string>
+    finalizers	<[]string>
+    generateName	<string>
+    generation	<integer>
+    labels	<map[string]string>
+    managedFields	<[]ManagedFieldsEntry>
+      apiVersion	<string>
+      fieldsType	<string>
+      fieldsV1	<FieldsV1>
+      manager	<string>
+      operation	<string>
+      subresource	<string>
+      time	<string>
+    name	<string>
+    namespace	<string>
+    ownerReferences	<[]OwnerReference>
+      apiVersion	<string> -required-
+      blockOwnerDeletion	<boolean>
+      controller	<boolean>
+      kind	<string> -required-
+      name	<string> -required-
+      uid	<string> -required-
+    resourceVersion	<string>
+    selfLink	<string>
+    uid	<string>
+  mountOptions	<[]string>
+  parameters	<map[string]string>
+  provisioner	<string> -required-
+  reclaimPolicy	<string>
+  enum: Delete, Recycle, Retain
+  volumeBindingMode	<string>
+  enum: Immediate, WaitForFirstConsumer
+
