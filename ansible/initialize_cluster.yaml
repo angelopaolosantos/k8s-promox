@@ -68,7 +68,7 @@
         #     oidc-ca-file: "/etc/kubernetes/pki/ca.crt"
             oidc-username-prefix: "oidc:"
             oidc-groups-prefix: "oidc:"
-            oidc-username-claim: "preferred_username"
+            oidc-username-claim: "preferred_username" # sub | preferred_username | email
             oidc-groups-claim: "groups"
         # controllerManager:
         #   extraArgs:
